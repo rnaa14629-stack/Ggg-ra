@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SAUDI MISSION LAB | AX-2</title>
+<style>
+:root{
+--bg:#080e1b;--panel:#101c30;--line:#2a405b;
+--text:#edf3fa;--muted:#9aacc1;--cyan:#64dafa;
+--gold:#d8b96e;--green:#72d9a5;--red:#f17c8d
+}
+*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(ellipse at top,#1a3150,var(--bg) 60%);color:var(--text);font-family:Arial,Tahoma,sans-serif}
+button,input{font:inherit}
+button{background:#172941;color:var(--text);border:1px solid #38516c;border-radius:8px;padding:12px 17px;cursor:pointer}
+button:hover{border-color:var(--cyan)}
+button:disabled{opacity:.5;cursor:not-allowed}
+.primary{background:#12617d;border-color:var(--cyan);font-weight:bold}
+header{padding:20px 5%;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.logo{font-size:18px;font-weight:bold;letter-spacing:1px}
+.logo span{color:var(--cyan)}
+.status{color:var(--green);font-size:12px}
+main{max-width:1100px;margin:auto;padding:25px 17px 60px}
+.hero,.panel{background:linear-gradient(145deg,#14243a,#0d1728);border:1px solid var(--line);border-radius:14px;padding:24px}
+.hero{display:grid;grid-template-columns:1.4fr .6fr;gap:20px;align-items:center}
+.eyebrow{color:var(--cyan);font-size:11px;letter-spacing:2px;font-weight:bold}
+h1{font-size:clamp(27px,4vw,42px);margin:12px 0}
+h2{font-size:23px;margin:8px 0}
+p{line-height:1.9}
+.muted{color:var(--muted)}
+.orbit{height:160px;display:grid;place-items:center;position:relative}
+.planet{width:90px;height:90px;border-radius:50%;background:radial-gradient(circle at 30% 25%,#a5edff,#2674a5 50%,#101b35 80%);box-shadow:0 0 45px #64dafa55}
+.orbit:before,.orbit:after{content:"";position:absolute;width:190px;height:65px;border:1px solid #64dafa66;border-radius:50%;transform:rotate(-25deg)}
+.orbit:after{transform:rotate(30deg);width:155px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:18px 0}
+.stat{background:#0d1727;border:1px solid var(--line);border-radius:10px;padding:15px}
+.stat small{display:block;color:var(--muted);margin-bottom:8px}
+.stat strong{font-size:22px}
+.progress{height:5px;background:#26364b;margin-top:10px;border-radius:10px;overflow:hidden}
+.progress span{display:block;height:100%;width:0;background:var(--cyan)}
+.tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:18px 0}
+.tab{text-align:right;background:#101b2d;padding:15px}
+.tab.active{border-color:var(--cyan);background:#17334a}
+.tab.done{border-color:var(--green)}
+.tab b,.tab small{display:block}
+.tab small{color:var(--muted);margin-top:6px}
+.panel{margin-top:15px}
+.panel-head{border-bottom:1px solid var(--line);padding-bottom:15px;margin-bottom:20px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.box{background:#091321;border:1px solid var(--line);border-radius:10px;padding:17px}
+.box h3{margin-top:0}
+.range{margin:18px 0}
+.range label{display:flex;justify-content:space-between;gap:10px;margin-bottom:9px}
+output{color:var(--cyan)}
+input[type=range]{width:100%;accent-color:var(--cyan)}
+.metric{display:flex;justify-content:space-between;padding:11px 0;border-bottom:1px solid #25364b;color:var(--muted)}
+.metric b{color:var(--text)}
+.visual{height:200px;border:1px solid var(--line);border-radius:10px;display:grid;place-items:center;background:radial-gradient(circle,#1b3858,#080e1b 70%);font-size:50px;margin-bottom:12px}
+.notice{background:#14243a;padding:13px;border-radius:8px;margin-top:14px;line-height:1.8;font-size:14px}
+.good{border:1px solid #367d61;color:#b5f3d2}
+.bad{border:1px solid #854353;color:#ffc1cb}
+.actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:15px}
+.choices{display:grid;gap:10px;margin-top:15px}
+.choice{text-align:right;line-height:1.7}
+.choice.selected{border-color:var(--cyan);background:#17334a}
+.choice.correct{border-color:var(--green)}
+.event-card{margin-top:18px;padding:22px;border:1px solid var(--gold);border-radius:10px;background:linear-gradient(145deg,#1b2b40,#101a2a);animation:appear .5s ease}
+.event-label{font-size:11px;color:var(--gold);letter-spacing:1.5px;font-weight:bold}
+.event-card h3{font-size:20px;margin:12px 0}
+.event-date{color:var(--gold);font-size:13px}
+.event-card p{color:#d0d9e5;line-height:1.9}
+.event-foot{font-size:12px;color:var(--muted)}
+.hidden{display:none!important}
+@keyframes appear{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+table{width:100%;border-collapse:collapse;margin-top:12px}
+th,td{padding:12px 7px;text-align:center;border-bottom:1px solid var(--line)}
+th{color:var(--muted);font-size:13px}
+.certificate{margin-top:20px;padding:35px 22px;border:2px solid var(--gold);outline:5px double #b99b5855;outline-offset:-10px;text-align:center;background:radial-gradient(ellipse at top,#263b54,#0b1423);position:relative}
+.seal{width:75px;height:75px;border:1px solid var(--gold);border-radius:50%;display:grid;place-items:center;margin:0 auto 15px;color:var(--gold);font-size:30px}
+.cert-title{font-size:clamp(25px,4vw,36px);color:#f1dba7;margin:15px 0}
+.cert-name{font-size:clamp(25px,5vw,38px);color:var(--gold);margin:22px 0}
+.cert-score{font-size:27px;margin:18px;color:var(--gold)}
+.cert-meta{display:flex;justify-content:space-around;gap:12px;flex-wrap:wrap;border-top:1px solid #9d824c;padding-top:18px;margin-top:20px;font-size:11px;color:#d7c99f}
+footer{color:var(--muted);font-size:12px;line-height:1.8;margin-top:22px}
+.start{position:fixed;inset:0;background:radial-gradient(ellipse at top,#203c5c,#070c18 70%);z-index:10;display:grid;place-items:center;padding:20px}
+.start-card{width:min(460px,100%);padding:30px;background:#111e32;border:1px solid #49627c;border-radius:15px;text-align:center}
+.start-card input{width:100%;padding:14px;margin:17px 0;background:#080f1c;color:white;border:1px solid #405873;border-radius:8px;text-align:center}
+@media(max-width:700px){.hero,.grid{grid-template-columns:1fr}.stats{gap:7px}.stat{padding:10px}.stat strong{font-size:18px}.tabs{gap:5px}.tab{padding:10px 7px}.tab b{font-size:12px}.tab small{font-size:10px}.hero{padding:18px}.panel{padding:16px}.cert-meta{flex-direction:column}}
+@media print{
+body *{visibility:hidden!important}
+#certificate,#certificate *{visibility:visible!important}
+#certificate{position:absolute;inset:0;margin:0;width:100%;min-height:95vh;background:white!important;color:#111!important;outline-color:#b99b58!important}
+#certificate h2,#certificate p,#certificate div{color:#222!important}
+#certificate .cert-title,#certificate .cert-name,#certificate .cert-score{color:#80652d!important}
+#certificate button{display:none!important}
+}
+</style>
+</head>
+<body>
+
+<div class="start" id="startScreen">
+ <div class="start-card">
+  <div class="eyebrow">SAUDI MISSION LAB · AX-2</div>
+  <h1>ابدأ المهمة</h1>
+  <p class="muted">أدخل اسمك للمشاركة في التجربة وظهوره على شهادة الإنجاز.</p>
+  <input id="startName" maxlength="35" placeholder="اسم المشارك">
+  <button class="primary" id="startBtn">بدء التجربة</button>
+  <p id="startError" style="color:var(--red)"></p>
+ </div>
+</div>
+
+<header>
+ <div class="logo">SAUDI <span>MISSION LAB</span></div>
+ <div class="status">● SYSTEM ONLINE</div>
+</header>
+
+<main>
+<section class="hero">
+ <div>
+  <div class="eyebrow">AXIOM MISSION 2 · INTERACTIVE EXPERIENCE</div>
+  <h1>من الأرض إلى الفضاء</h1>
+  <p class="muted">تجربة تفاعلية تستعرض مهمة ريانة برناوي وعلي القرني، من الإطلاق وحتى العودة إلى الأرض، من خلال تحديات تحليلية ومحاكاة تعليمية.</p>
+ </div>
+ <div class="orbit"><div class="planet"></div></div>
+</section>
+
+<section class="stats">
+ <div class="stat"><small>النقاط</small><strong id="score">0 / 300</strong><div class="progress"><span id="scorebar"></span></div></div>
+ <div class="stat"><small>المراحل المكتملة</small><strong id="completed">0 / 3</strong><div class="progress"><span id="donebar"></span></div></div>
+ <div class="stat"><small>حالة المهمة</small><strong id="status">قيد التنفيذ</strong></div>
+</section>
+
+<nav class="tabs">
+ <button class="tab active" data-tab="launch"><b>01 — تسلسل الإطلاق</b><small>LAUNCH SEQUENCE</small></button>
+ <button class="tab" data-tab="lab"><b>02 — العمليات العلمية</b><small>SCIENCE OPERATIONS</small></button>
+ <button class="tab" data-tab="return"><b>03 — العودة للأرض</b><small>EARTH RETURN</small></button>
+</nav>
+
+<!-- المرحلة الأولى -->
+<section class="panel" id="launch">
+ <div class="panel-head">
+  <div class="eyebrow">SIMULATION 01 / LAUNCH</div>
+  <h2>تسلسل الإطلاق</h2>
+  <p class="muted">رتّب مراحل المهمة الأساسية بالترتيب الصحيح قبل اعتماد خطة الإطلاق.</p>
+ </div>
+ <div class="grid">
+  <div class="box">
+   <h3>مركز العمليات</h3>
+   <p class="muted">اختر الترتيب الصحيح لتسلسل المهمة:</p>
+   <div class="choices" id="launchChoices">
+    <button class="choice" data-answer="wrong">الوصول إلى المدار ← الإطلاق ← انفصال المركبة</button>
+    <button class="choice" data-answer="right">الإطلاق ← الوصول إلى المدار ← الالتحام بالمحطة</button>
+    <button class="choice" data-answer="wrong">الالتحام ← الإطلاق ← العودة إلى الأرض</button>
+    <button class="choice" data-answer="wrong">العودة إلى الأرض ← الإطلاق ← الوصول إلى المدار</button>
+   </div>
+   <div class="actions"><button class="primary" id="launchSubmit">اعتماد التسلسل</button></div>
+   <div class="notice" id="launchResult">اختر التسلسل الذي تراه صحيحًا.</div>
+  </div>
+  <div class="box">
+   <h3>بيانات المهمة</h3>
+   <div class="visual">🚀</div>
+   <div class="metric"><span>اسم المهمة</span><b>AX-2</b></div>
+   <div class="metric"><span>مركبة الطاقم</span><b>Dragon Freedom</b></div>
+   <div class="metric"><span>صاروخ الإطلاق</span><b>Falcon 9</b></div>
+   <div class="metric"><span>الطاقم السعودي</span><b>ريانة برناوي · علي القرني</b></div>
+  </div>
+ </div>
+ <div id="launchEvent" class="event-card hidden">
+  <div class="event-label">حدث تاريخي حقيقي · AX-2</div>
+  <h3>من الإطلاق إلى محطة الفضاء الدولية</h3>
+  <div class="event-date">21–22 مايو 2023</div>
+  <p>في 21 مايو 2023 انطلقت مهمة AX-2 على متن صاروخ Falcon 9 ومركبة Dragon Freedom، وعلى متنها ريانة برناوي وعلي القرني مع بقية الطاقم. وفي 22 مايو التحمت المركبة بمحطة الفضاء الدولية، ثم دخل أفراد الطاقم إلى المحطة.</p>
+  <p class="event-foot">التحدي السابق نشاط تعليمي لترتيب التسلسل، وليس إعادة تنفيذ فعلية للإطلاق أو الالتحام.</p>
+ </div>
+</section>
+
+<!-- المرحلة الثانية -->
+<section class="panel hidden" id="lab">
+ <div class="panel-head">
+  <div class="eyebrow">SIMULATION 02 / RESEARCH</div>
+  <h2>تحليل نتائج المختبر</h2>
+  <p class="muted">حلّل البيانات وحدد الاستنتاج الذي تدعمه الأرقام دون افتراض أن الارتباط يثبت السبب.</p>
+ </div>
+ <div class="grid">
+  <div class="box">
+   <h3>مجموعة البيانات</h3>
+   <p class="muted">القيم اصطناعية لأغراض التحدي، وليست نتائج منشورة لتجارب ريانة أو علي.</p>
+   <table>
+    <thead><tr><th>الظرف</th><th>متوسط القياس</th><th>تشتت القياس</th></tr></thead>
+    <tbody>
+     <tr><td>أ</td><td>18.2</td><td>1.1</td></tr>
+     <tr><td>ب</td><td>24.7</td><td>4.8</td></tr>
+     <tr><td>ج</td><td>21.0</td><td>1.4</td></tr>
+    </tbody>
+   </table>
+  </div>
+  <div class="box">
+   <h3>قرار الباحث</h3>
+   <p class="muted">اختر العبارة الأكثر اتساقًا مع البيانات:</p>
+   <div class="choices" id="labChoices">
+    <button class="choice" data-answer="right">الظرف ب سجّل أعلى متوسط، لكنه أيضًا الأعلى تشتتًا؛ يلزم فحص إضافي قبل الجزم بسبب الاختلاف.</button>
+    <button class="choice" data-answer="wrong">الظرف ب هو الأفضل قطعًا، لأن أعلى متوسط يعني نتيجة أفضل في كل الحالات.</button>
+    <button class="choice" data-answer="wrong">الظروف الثلاثة متطابقة لأن القيم متقاربة.</button>
+    <button class="choice" data-answer="wrong">الظرف أ يثبت أن انخفاض القياس هو سبب الاستجابة.</button>
+   </div>
+   <div class="actions"><button class="primary" id="labSubmit">اعتماد الاستنتاج</button></div>
+   <div class="notice" id="labResult">سيتم تقييم اختيارك بعد الاعتماد.</div>
+  </div>
+ </div>
+ <div id="labEvent" class="event-card hidden">
+  <div class="event-label">حدث تاريخي حقيقي · AX-2</div>
+  <h3>تجارب علمية في بيئة الجاذبية الصغرى</h3>
+  <div class="event-date">24 مايو 2023</div>
+  <p>خلال عمليات المهمة العلمية، نفذت ريانة برناوي أعمالًا مرتبطة بتجربة DNA Nano Therapeutics باستخدام خزانة القفازات المخصصة لعلوم الحياة على متن المحطة. وذكرت Axiom Space أن المشروع أنتج مواد نانوية مستوحاة من DNA على متن محطة الفضاء الدولية.</p>
+  <p class="event-foot">هذه التجربة الحقيقية مختلفة عن جدول البيانات الافتراضي الذي حللته في اللعبة.</p>
+ </div>
+</section>
+
+<!-- المرحلة الثالثة -->
+<section class="panel hidden" id="return">
+ <div class="panel-head">
+  <div class="eyebrow">SIMULATION 03 / EARTH RETURN</div>
+  <h2>العودة إلى الأرض</h2>
+  <p class="muted">رتّب تسلسل العودة من محطة الفضاء الدولية إلى الهبوط على الأرض.</p>
+ </div>
+ <div class="grid">
+  <div class="box">
+   <h3>إجراءات العودة</h3>
+   <p class="muted">ما التسلسل الصحيح لعودة المركبة؟</p>
+   <div class="choices" id="returnChoices">
+    <button class="choice" data-answer="wrong">الهبوط ← الانفصال عن المحطة ← مغادرة المدار</button>
+    <button class="choice" data-answer="right">الانفصال عن المحطة ← رحلة العودة ← الهبوط</button>
+    <button class="choice" data-answer="wrong">رحلة العودة ← الالتحام ← الإطلاق</button>
+    <button class="choice" data-answer="wrong">الهبوط ← الإطلاق ← الالتحام</button>
+   </div>
+   <div class="actions"><button class="primary" id="returnSubmit">اعتماد التسلسل</button></div>
+   <div class="notice" id="returnResult">اختر الترتيب الصحيح لإجراءات العودة.</div>
+  </div>
+  <div class="box">
+   <h3>ملف العودة</h3>
+   <div class="visual">🌎</div>
+   <div class="metric"><span>المركبة</span><b>Dragon Freedom</b></div>
+   <div class="metric"><span>وجهة العودة</span><b>الأرض</b></div>
+   <div class="metric"><span>طريقة الهبوط</span><b>هبوط مائي</b></div>
+   <div class="metric"><span>التاريخ</span><b>30 مايو 2023</b></div>
+  </div>
+ </div>
+ <div id="returnEvent" class="event-card hidden">
+  <div class="event-label">حدث تاريخي حقيقي · AX-2</div>
+  <h3>العودة إلى الأرض</h3>
+  <div class="event-date">30 مايو 2023</div>
+  <p>في يوم العودة انفصلت مركبة Dragon Freedom عن محطة الفضاء الدولية، ثم أكملت رحلة العودة إلى الأرض وهبطت بسلام في مياه خليج المكسيك قبالة سواحل فلوريدا.</p>
+  <p class="event-foot">التحدي السابق نشاط تعليمي لترتيب خطوات العودة، وليس محاكاة لبيانات تشغيل المركبة الفعلية.</p>
+ </div>
+</section>
+
+<!-- الشهادة -->
+<section class="panel" id="finalPanel">
+ <div class="eyebrow">MISSION DEBRIEF</div>
+ <h2>تقرير إكمال المهمة</h2>
+ <p class="muted" id="debrief">أكمل المراحل الثلاث لفتح شهادة الإنجاز.</p>
+ <div id="certificate" class="certificate hidden">
+  <div class="seal">✦</div>
+  <div class="eyebrow">SAUDI MISSION LAB · AX-2 EXPERIENCE</div>
+  <h2 class="cert-title">شهادة إتمام تجربة تفاعلية</h2>
+  <p>تُمنح هذه الشهادة إلى</p>
+  <div class="cert-name" id="certName">اسم المشارك</div>
+  <p>تقديرًا لإتمام مراحل التجربة التعليمية المستوحاة من مهمة AX-2، وإظهار مهارات في التحليل واتخاذ القرار وفهم العمليات الفضائية.</p>
+  <div class="cert-score" id="certScore">300 / 300</div>
+  <div class="eyebrow">MISSION PERFORMANCE SCORE</div>
+  <div class="cert-meta">
+   <span>MISSION · AX-2 EXPERIENCE</span>
+   <span id="certDate"></span>
+   <span>SAUDI MISSION LAB</span>
+  </div>
+  <div class="actions" style="justify-content:center"><button class="primary" onclick="window.print()">طباعة الشهادة / حفظ PDF</button></div>
+ </div>
+</section>
+
+<!-- لوحة المتصدرين -->
+<section class="panel" style="margin-top:20px">
+ <div class="eyebrow">MISSION RANKING</div>
+ <h2>لوحة المتصدرين</h2>
+ <p class="muted">أفضل النتائج المسجلة على هذا الجهاز والمتصفح.</p>
+ <table>
+  <thead><tr><th>المركز</th><th>اسم المشارك</th><th>النقاط</th></tr></thead>
+  <tbody id="leaderRows"><tr><td colspan="3">لا توجد نتائج حتى الآن</td></tr></tbody>
+ </table>
+</section>
+
+<footer>
+ملاحظة توثيقية: الأحداث التاريخية منفصلة عن أنشطة اللعبة. بيانات التحليل في المرحلة الثانية اصطناعية للتدريب. التحديات التعليمية لا تمثل إجراءات تشغيلية نفذها رائدا الفضاء.
+</footer>
+</main>
+
+<script>
+const $=id=>document.getElementById(id);
+let participantName='';
+let score=0;
+let completed=0;
+let saved=false;
+const results={launch:false,lab:false,ret:false};
+const leaderboardKey='ax2MissionLeaderboardV1';
+
+function escapeHTML(value){
+ return String(value).replace(/[&<>"']/g,c=>({
+ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+ }[c]));
+}
+
+function getBoard(){
+ try{return JSON.parse(localStorage.getItem(leaderboardKey)||'[]')}
+ catch(e){return []}
+}
+
+function renderBoard(){
+ const rows=getBoard().sort((a,b)=>b.score-a.score).slice(0,10);
+ $('leaderRows').innerHTML=rows.length
+ ?rows.map((r,i)=>`<tr><td>${i+1}</td><td>${escapeHTML(r.name)}</td><td>${r.score}/300</td></tr>`).join('')
+ :'<tr><td colspan="3">لا توجد نتائج حتى الآن</td></tr>';
+}
+
+$('startBtn').addEventListener('click',()=>{
+ const name=$('startName').value.trim();
+ if(!name){$('startError').textContent='يرجى إدخال الاسم أولًا.';return}
+ participantName=name;
+ $('startScreen').classList.add('hidden');
+ $('debrief').textContent='المشارك: '+participantName+' — أكمل المراحل الثلاث لفتح الشهادة.';
+});
+
+$('startName').addEventListener('keydown',e=>{
+ if(e.key==='Enter')$('startBtn').click();
+});
+
+function updateProgress(){
+ $('score').textContent=score+' / 300';
+ $('scorebar').style.width=(score/300*100)+'%';
+ $('completed').textContent=completed+' / 3';
+ $('donebar').style.width=(completed/3*100)+'%';
+ $('status').textContent=completed===3?'اكتملت':'قيد التنفيذ';
+ document.querySelectorAll('.tab').forEach(tab=>{
+  const key=tab.dataset.tab==='return'?'ret':tab.dataset.tab;
+  tab.classList.toggle('done',results[key]);
+ });
+ $('debrief').textContent=completed===3
+ ?'اكتملت جميع المراحل بنجاح. نتيجتك النهائية '+score+' من 300.'
+ :'المشارك: '+participantName+' — المراحل المكتملة: '+completed+' من 3.';
+ if(completed===3)completeMission();
+}
+
+function completeMission(){
+ if(saved)return;
+ saved=true;
+ const rows=getBoard();
+ rows.push({name:participantName,score:score,date:new Date().toISOString()});
+ rows.sort((a,b)=>b.score-a.score);
+ localStorage.setItem(leaderboardKey,JSON.stringify(rows.slice(0,50)));
+ renderBoard();
+ $('certName').textContent=participantName;
+ $('certScore').textContent=score+' / 300';
+ $('certDate').textContent=new Date().toLocaleDateString('ar-SA');
+ $('certificate').classList.remove('hidden');
+ $('certificate').scrollIntoView({behavior:'smooth',block:'center'});
+}
+
+function finishStage(key,points,eventId){
+ if(results[key])return;
+ results[key]=true;
+ score+=points;
+ completed++;
+ updateProgress();
+ $(eventId).classList.remove('hidden');
+ $(eventId).scrollIntoView({behavior:'smooth',block:'center'});
+}
+
+function setupChoices(groupId,submitId,resultId,key,eventId){
+ let selected=null;
+ const buttons=[...document.querySelectorAll('#'+groupId+' .choice')];
+ buttons.forEach(button=>{
+  button.addEventListener('click',()=>{
+   if(results[key])return;
+   selected=button;
+   buttons.forEach(b=>b.classList.toggle('selected',b===button));
+  });
+ });
+ $(submitId).addEventListener('click',()=>{
+  if(results[key])return;
+  if(!selected){
+   $(resultId).textContent='اختر إجابة قبل الاعتماد.';
+   return;
+  }
+  const correct=selected.dataset.answer==='right';
+  const points=correct?100:20;
+  buttons.forEach(b=>{
+   b.disabled=true;
+   if(b.dataset.answer==='right')b.classList.add('correct');
+  });
+  $(submitId).disabled=true;
+  $(resultId).className='notice '+(correct?'good':'bad');
+  $(resultId).textContent=correct
+   ?'إجابة صحيحة. تم اعتماد المرحلة بنجاح. حصلت على 100 نقطة.'
+   :'الإجابة غير صحيحة. تم تسجيل المحاولة ومنحك 20 نقطة. راجع التسلسل الصحيح الظاهر في الاختيارات.';
+  finishStage(key,points,eventId);
+ });
+}
+
+document.querySelectorAll('.tab').forEach(tab=>{
+ tab.addEventListener('click',()=>{
+  document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t===tab));
+  ['launch','lab','return'].forEach(id=>{
+   $(id).classList.toggle('hidden',id!==tab.dataset.tab);
+  });
+ });
+});
+
+setupChoices('launchChoices','launchSubmit','launchResult','launch','launchEvent');
+setupChoices('labChoices','labSubmit','labResult','lab','labEvent');
+setupChoices('returnChoices','returnSubmit','returnResult','ret','returnEvent');
+
+renderBoard();
+</script>
+</body>
+</html>
